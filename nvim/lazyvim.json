@@ -1,6 +1,6 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.formatting.black"
   ],
   "install_version": 8,
   "news": {
