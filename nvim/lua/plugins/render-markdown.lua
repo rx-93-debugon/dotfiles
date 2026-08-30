@@ -14,5 +14,10 @@ return {
     checkbox = {
       enabled = true,
     },
+    latex = {
+      enabled = vim.fn.executable("latex2text") == 1,
+      converter = "latex2text",
+      highlight = "RenderMarkdownMath",
+    },
   },
 }
