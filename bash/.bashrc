@@ -20,3 +20,7 @@ function update_terminal_cwd() {
 
 # プロンプトを表示する直前にこの関数を呼び出すように設定
 PROMPT_COMMAND="update_terminal_cwd;$PROMPT_COMMAND"
+
+
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"
