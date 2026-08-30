@@ -12,3 +12,11 @@ HISTCONTROL=ignoredups:erasedups
 HISTTIMEFORMAT='%F %T '
 
 shopt -s histappend
+
+# OSC 7 を送信する関数
+function update_terminal_cwd() {
+  printf "\e]7;file://%s%s\e\\" "${HOSTNAME}" "${PWD}"
+}
+
+# プロンプトを表示する直前にこの関数を呼び出すように設定
+PROMPT_COMMAND="update_terminal_cwd;$PROMPT_COMMAND"
