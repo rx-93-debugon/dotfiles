@@ -35,7 +35,7 @@ RUN bash $USER_HOME/dotfiles/packages/ubuntu.sh \
 # --- switch user ---
 USER $USERNAME
 
-RUN bash $USER_HOME/dotfiles/install.sh \
+RUN bash $USER_HOME/dotfiles/install.sh 
 WORKDIR $USER_HOME
 
 CMD ["/bin/bash", "-l"]
