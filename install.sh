@@ -1,9 +1,6 @@
 #!/bin/bash
 
-ln -sf "$HOME/dotfiles/bash/.bashrc" "$HOME/.bashrc"
-ln -sf "$HOME/dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
-
-mkdir -p "$HOME/.config"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 link_config() {
   local src="$1"
@@ -15,6 +12,12 @@ link_config() {
   ln -sfn "$src" "$dest"
 }
 
-link_config "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
-link_config "$HOME/dotfiles/wezterm" "$HOME/.config/wezterm"
-link_config "$HOME/dotfiles/lazygit" "$HOME/.config/lazygit"
+link_config "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
+link_config "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+link_config "$DOTFILES_DIR/.editorconfig" "$HOME/.editorconfig"
+
+mkdir -p "$HOME/.config"
+
+link_config "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+link_config "$DOTFILES_DIR/wezterm" "$HOME/.config/wezterm"
+link_config "$DOTFILES_DIR/lazygit" "$HOME/.config/lazygit"
