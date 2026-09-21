@@ -1,3 +1,8 @@
+case $- in
+  *i*) ;;
+  *) return ;;
+esac
+
 PS1='\[\e[92m\]\u@\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]\$ '
 
 export TERM=xterm-256color
@@ -20,7 +25,6 @@ function update_terminal_cwd() {
 
 # プロンプトを表示する直前にこの関数を呼び出すように設定
 PROMPT_COMMAND="update_terminal_cwd;$PROMPT_COMMAND"
-
 
 # Added by Antigravity CLI installer
 export PATH="$HOME/.local/bin:$PATH"
