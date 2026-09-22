@@ -18,24 +18,32 @@ HISTTIMEFORMAT='%F %T '
 
 shopt -s histappend
 
-# bash-completion
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
 # Tab 補完設定 (Readline)
 bind 'set completion-ignore-case on'
 bind 'set show-all-if-ambiguous on'
 bind 'set mark-symlinked-directories on'
 
-# fzf キーバインド (Ctrl+R 履歴検索, Ctrl+T ファイル検索)
-if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
-  source /usr/share/doc/fzf/examples/key-bindings.bash
+# OS 固有の設定（補完やパス）を読み込む
+_bash_dir=""
+if [ -f "$HOME/dotfiles/bash/linux.bash" ]; then
+  _bash_dir="$HOME/dotfiles/bash"
+elif [ -f "$HOME/.dotfiles/bash/linux.bash" ]; then
+  _bash_dir="$HOME/.dotfiles/bash"
+elif [ -n "${BASH_SOURCE[0]}" ] && [ -f "$(dirname "${BASH_SOURCE[0]}")/linux.bash" ]; then
+  _bash_dir="$(dirname "${BASH_SOURCE[0]}")"
 fi
+
+if [ -n "$_bash_dir" ]; then
+  case "$(uname -s)" in
+    Linux*)
+      [ -f "$_bash_dir/linux.bash" ] && . "$_bash_dir/linux.bash"
+      ;;
+    Darwin*)
+      [ -f "$_bash_dir/macos.bash" ] && . "$_bash_dir/macos.bash"
+      ;;
+  esac
+fi
+unset _bash_dir
 
 # OSC 7 を送信する関数
 function update_terminal_cwd() {
