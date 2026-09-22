@@ -27,6 +27,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Tab 補完設定 (Readline)
+bind 'set completion-ignore-case on'
+bind 'set show-all-if-ambiguous on'
+bind 'set mark-symlinked-directories on'
+
 # OSC 7 を送信する関数
 function update_terminal_cwd() {
   printf "\e]7;file://%s%s\e\\" "${HOSTNAME}" "${PWD}"
