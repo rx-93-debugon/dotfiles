@@ -47,6 +47,7 @@ install_neovim() {
 
 apt update
 apt install -y \
+  bash-completion \
   tmux \
   git \
   curl \
