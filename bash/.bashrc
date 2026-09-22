@@ -32,6 +32,11 @@ bind 'set completion-ignore-case on'
 bind 'set show-all-if-ambiguous on'
 bind 'set mark-symlinked-directories on'
 
+# fzf キーバインド (Ctrl+R 履歴検索, Ctrl+T ファイル検索)
+if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.bash
+fi
+
 # OSC 7 を送信する関数
 function update_terminal_cwd() {
   printf "\e]7;file://%s%s\e\\" "${HOSTNAME}" "${PWD}"
