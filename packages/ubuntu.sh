@@ -45,21 +45,28 @@ install_neovim() {
   rm -f "${tgz_name}"
 }
 
-apt update
-apt install -y \
-  bash-completion \
-  tmux \
-  git \
-  curl \
-  fzf \
-  ripgrep \
-  fd-find
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PACKAGE_LIST="$SCRIPT_DIR/packages.list"
 
-apt install -y \
-  build-essential \
-  gcc \
-  g++ \
-  make
+if [ ! -f "$PACKAGE_LIST" ]; then
+  echo "Error: Package list not found at $PACKAGE_LIST" >&2
+  exit 1
+fi
+
+echo "Reading packages for APT from $PACKAGE_LIST..."
+pkgs=()
+while IFS= read -r pkg; do
+  [ -n "$pkg" ] && pkgs+=("$pkg")
+done < <(awk '!/^#/ && NF >= 3 && $3 != "-" {print $3}' "$PACKAGE_LIST")
+
+apt update
+
+if [ ${#pkgs[@]} -eq 0 ]; then
+  echo "No packages to install for APT."
+else
+  echo "Installing packages via APT: ${pkgs[*]}"
+  apt install -y "${pkgs[@]}"
+fi
 
 install_delta
 install_neovim
