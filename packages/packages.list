@@ -1,0 +1,30 @@
+# ==============================================================================
+# Package Definition List
+# ==============================================================================
+# Format:
+#   <logical_name>    <homebrew_pkg>         <apt_pkg>
+#
+# Use '-' if the package is not installed via package manager on that platform.
+# ==============================================================================
+
+# Shell & Completion
+bash                  bash                   -
+bash-completion       bash-completion@2      bash-completion
+
+# Common CLI tools
+tmux                  tmux                   tmux
+git                   git                    git
+curl                  curl                   curl
+fzf                   fzf                    fzf
+ripgrep               ripgrep                ripgrep
+fd                    fd                     fd-find
+
+# Ubuntu build tools
+build-essential       -                      build-essential
+gcc                   -                      gcc
+g++                   -                      g++
+make                  -                      make
+
+# Tools installed via Brew on macOS (handled via custom installer scripts on Ubuntu)
+git-delta             git-delta              -
+neovim                neovim                 -
