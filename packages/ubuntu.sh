@@ -14,8 +14,11 @@ install_delta() {
   local version
   version=$(curl -s "https://api.github.com/repos/dandavison/delta/releases/latest" | grep -oP '"tag_name": "\K[^"]*')
 
+  local arch
+  arch=$(dpkg --print-architecture)
+
   # ダウンロードとインストール
-  curl -Lo delta.deb "https://github.com/dandavison/delta/releases/download/${version}/git-delta_${version}_amd64.deb"
+  curl -Lo delta.deb "https://github.com/dandavison/delta/releases/download/${version}/git-delta_${version}_${arch}.deb"
   dpkg -i delta.deb
   rm delta.deb
 }
@@ -31,7 +34,18 @@ install_neovim() {
   local version
   version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep -oP '"tag_name": "\K[^"]*')
 
-  local tgz_name="nvim-linux-x86_64.tar.gz"
+  local arch
+  case "$(uname -m)" in
+    aarch64|arm64) arch="arm64" ;;
+    x86_64|amd64)  arch="x86_64" ;;
+    *)
+      echo "Unsupported architecture for Neovim: $(uname -m)" >&2
+      return 1
+      ;;
+  esac
+
+  local tgz_dir="nvim-linux-${arch}"
+  local tgz_name="${tgz_dir}.tar.gz"
 
   curl -Lo "${tgz_name}" "https://github.com/neovim/neovim/releases/download/${version}/${tgz_name}"
   tar xzf "${tgz_name}"
@@ -39,7 +53,7 @@ install_neovim() {
   # パス配置とシンボリックリンク作成
   mkdir -p /opt
   rm -rf /opt/nvim
-  mv nvim-linux-x86_64 /opt/nvim
+  mv "${tgz_dir}" /opt/nvim
   ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
 
   rm -f "${tgz_name}"
