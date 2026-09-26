@@ -12,7 +12,7 @@ if ! command -v brew &>/dev/null; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/common.sh"
+source "$SCRIPT_DIR/common_loader.sh"
 
 load_packages brew pkgs
 
