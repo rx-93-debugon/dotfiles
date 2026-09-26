@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
@@ -46,18 +46,9 @@ install_neovim() {
 }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGE_LIST="$SCRIPT_DIR/packages.list"
+source "$SCRIPT_DIR/common.sh"
 
-if [ ! -f "$PACKAGE_LIST" ]; then
-  echo "Error: Package list not found at $PACKAGE_LIST" >&2
-  exit 1
-fi
-
-echo "Reading packages for APT from $PACKAGE_LIST..."
-pkgs=()
-while IFS= read -r pkg; do
-  [ -n "$pkg" ] && pkgs+=("$pkg")
-done < <(awk '!/^#/ && NF >= 3 && $3 != "-" {print $3}' "$PACKAGE_LIST")
+load_packages apt pkgs
 
 apt update
 
