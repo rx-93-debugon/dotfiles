@@ -14,6 +14,7 @@ bash-completion       bash-completion@2      bash-completion
 # Common CLI tools
 tmux                  tmux                   tmux
 git                   git                    git
+gh                    gh                     gh
 curl                  curl                   curl
 fzf                   fzf                    fzf
 ripgrep               ripgrep                ripgrep
