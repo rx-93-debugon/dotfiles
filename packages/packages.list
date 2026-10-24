@@ -28,4 +28,5 @@ make                  -                      make
 
 # Tools installed via Brew on macOS (handled via custom installer scripts on Ubuntu)
 git-delta             git-delta              -
+lazygit               lazygit                -
 neovim                neovim                 -
