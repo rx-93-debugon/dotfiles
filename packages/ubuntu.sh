@@ -64,13 +64,13 @@ source "$SCRIPT_DIR/common_loader.sh"
 
 load_packages apt pkgs
 
-apt update
+apt-get update
 
 if [ ${#pkgs[@]} -eq 0 ]; then
   echo "No packages to install for APT."
 else
   echo "Installing packages via APT: ${pkgs[*]}"
-  apt install -y "${pkgs[@]}"
+  apt-get install -y "${pkgs[@]}"
 fi
 
 install_delta
