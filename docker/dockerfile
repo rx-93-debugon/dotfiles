@@ -7,8 +7,6 @@ ARG USER_HOME=/home/$USERNAME
 
 # init setings of the os
 ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=ja_JP.UTF-8
-ENV LC_ALL=ja_JP.UTF-8
 
 # --- base minimum ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -17,6 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     locales \
     && locale-gen ja_JP.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=ja_JP.UTF-8
+ENV LC_ALL=ja_JP.UTF-8
 
 RUN if id -u $USER_UID >/dev/null 2>&1; then userdel -r $(id -un $USER_UID); fi \
     && groupadd --gid $USER_GID $USERNAME \
