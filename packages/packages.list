@@ -26,7 +26,7 @@ gcc                   -                      gcc
 g++                   -                      g++
 make                  -                      make
 
-# Tools installed via Brew on macOS (handled via custom installer scripts on Ubuntu)
-git-delta             git-delta              -
-lazygit               lazygit                -
-neovim                neovim                 -
+# Development tools
+git-delta             git-delta              git-delta
+lazygit               lazygit                lazygit
+neovim                neovim                 neovim

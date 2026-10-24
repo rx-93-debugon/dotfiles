@@ -2,93 +2,6 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
-# git-delta のインストール関数
-install_delta() {
-  if command -v delta &>/dev/null; then
-    echo "git-delta is already installed."
-    return 0
-  fi
-
-  echo "Installing git-delta from GitHub..."
-  # GitHub API から最新のバージョンタグを取得 (例: v0.17.0)
-  local version
-  version=$(curl -s "https://api.github.com/repos/dandavison/delta/releases/latest" | grep -oP '"tag_name": "\K[^"]*')
-
-  local arch
-  arch=$(dpkg --print-architecture)
-
-  # ダウンロードとインストール
-  curl -Lo delta.deb "https://github.com/dandavison/delta/releases/download/${version}/git-delta_${version}_${arch}.deb"
-  dpkg -i delta.deb
-  rm delta.deb
-}
-
-install_lazygit() (
-  if command -v lazygit &>/dev/null; then
-    echo "Lazygit is already installed."
-    return 0
-  fi
-
-  local arch
-  case "$(dpkg --print-architecture)" in
-    amd64) arch="x86_64" ;;
-    arm64) arch="arm64" ;;
-    *)
-      echo "Unsupported architecture for Lazygit: $(dpkg --print-architecture)" >&2
-      return 1
-      ;;
-  esac
-
-  echo "Installing the latest Lazygit from GitHub..."
-  local version
-  version=$(curl -fsSL "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -oP '"tag_name":\s*"v\K[^"]*')
-
-  local temp_dir
-  temp_dir=$(mktemp -d)
-  trap 'rm -rf "$temp_dir"' EXIT
-
-  curl -fsSL "https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz" \
-    -o "$temp_dir/lazygit.tar.gz"
-  tar -xzf "$temp_dir/lazygit.tar.gz" -C "$temp_dir" lazygit
-  install -m 755 "$temp_dir/lazygit" /usr/local/bin/lazygit
-)
-
-install_neovim() {
-  if command -v nvim &>/dev/null; then
-    echo "Neovim is already installed."
-    return 0
-  fi
-
-  echo "Installing the latest Neovim from GitHub..."
-
-  local version
-  version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep -oP '"tag_name": "\K[^"]*')
-
-  local arch
-  case "$(uname -m)" in
-    aarch64|arm64) arch="arm64" ;;
-    x86_64|amd64)  arch="x86_64" ;;
-    *)
-      echo "Unsupported architecture for Neovim: $(uname -m)" >&2
-      return 1
-      ;;
-  esac
-
-  local tgz_dir="nvim-linux-${arch}"
-  local tgz_name="${tgz_dir}.tar.gz"
-
-  curl -Lo "${tgz_name}" "https://github.com/neovim/neovim/releases/download/${version}/${tgz_name}"
-  tar xzf "${tgz_name}"
-
-  # パス配置とシンボリックリンク作成
-  mkdir -p /opt
-  rm -rf /opt/nvim
-  mv "${tgz_dir}" /opt/nvim
-  ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
-
-  rm -f "${tgz_name}"
-}
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common_loader.sh"
 
@@ -102,10 +15,6 @@ else
   echo "Installing packages via APT: ${pkgs[*]}"
   apt-get install -y "${pkgs[@]}"
 fi
-
-install_delta
-install_lazygit
-install_neovim
 
 rm -rf /var/lib/apt/lists/*
 

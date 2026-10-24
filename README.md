@@ -9,7 +9,7 @@ Bash、Neovim、tmux、WezTerm などの設定およびパッケージ導入ス�
 
 - **OS 共通のパッケージ管理**:
   - `packages/packages.list` にて Homebrew（macOS）と APT（Ubuntu）のパッケージ名を一箇所で一元管理。
-  - Ubuntu では `git-delta`・Lazygit・Neovim を公式リリースから、アーキテクチャ（arm64 / amd64）を自動判別して導入。
+  - Ubuntu 26.04 LTS では `gh`・git-delta・Lazygit・Neovim を含め、標準の APT リポジトリから導入。
 - **Shell (Bash)**:
   - OS 固有の設定（`macos.bash` / `linux.bash`）を自動判別して読み込み。
   - 共通設定は `.bashrc`、マシン固有の PATH・環境変数は管理対象外の `~/.bash_profile` に配置。
@@ -41,7 +41,7 @@ Bash、Neovim、tmux、WezTerm などの設定およびパッケージ導入ス�
 │   ├── packages.list   # パッケージ定義テーブル（一元管理）
 │   ├── common_loader.sh# パッケージ読み込み用共通モジュール
 │   ├── macos.sh        # macOS (Homebrew) 向けセットアップ
-│   └── ubuntu.sh       # Ubuntu (APT / GitHub) 向けセットアップ
+│   └── ubuntu.sh       # Ubuntu 26.04 LTS (APT) 向けセットアップ
 ├── tmux/               # tmux 設定 (.tmux.conf)
 ├── wezterm/            # WezTerm 設定 (wezterm.lua)
 ├── install.sh          # シンボリックリンク配置スクリプト
@@ -66,9 +66,9 @@ cd ~/dotfiles
 | ツール | macOS | Ubuntu 26.04 |
 | --- | --- | --- |
 | `gh` | Homebrew | 標準の APT リポジトリ（`universe`） |
-| Lazygit・Neovim・git-delta | Homebrew | GitHub の最新安定版リリース |
+| Lazygit・Neovim・git-delta | Homebrew | 標準の APT リポジトリ（`universe`） |
 
-Ubuntu の公式リリースからの導入は、すでにコマンドが存在する場合はスキップします。
+Ubuntu ではディストリビューションが提供するバージョンを使用し、更新も APT で管理します。
 
 #### macOS の場合
 Homebrew のインストール（未導入時）および必要なパッケージ・補完設定を一括で適用します。
@@ -77,13 +77,17 @@ Homebrew のインストール（未導入時）および必要なパッケー�
 bash packages/macos.sh
 ```
 
-#### Ubuntu / Debian の場合
-APT パッケージの更新・導入および GitHub からの最新バイナリ取得を行います。
-Ubuntu での `gh` の導入には `universe` が有効である必要があります。Docker の Ubuntu 26.04 イメージでは有効です。
+#### Ubuntu 26.04 LTS の場合
+`apt-get` でパッケージ情報を更新し、共通一覧のパッケージを導入します。
+`universe` が有効である必要があります。Docker の Ubuntu 26.04 イメージでは有効です。
+以前の Ubuntu や Debian ではパッケージの提供状況・バージョンが異なるため、この手順の対象外です。
 
 ```bash
 sudo bash packages/ubuntu.sh
 ```
+
+以前のスクリプトで導入済みの環境では、`/usr/local/bin` の Lazygit・Neovim が APT 版より優先される場合があります。
+`command -v lazygit nvim delta` で使用する実行ファイルを確認し、既存の手動導入分を整理してから移行してください。Docker イメージを作り直す場合はこの作業は不要です。
 
 ### 3. 設定ファイルのシンボリックリンク作成
 
@@ -139,7 +143,7 @@ fd                  fd                     fd-find
 
 - パッケージ名が異なる場合はそれぞれの列に正しいパッケージ名を指定します。
 - 一方の OS のみに導入したい場合は、対象外の列に `-` を指定します。
-- `-` はそのパッケージ管理ツールで導入しないことを意味します。Lazygit のように Ubuntu で独自の導入処理を使う場合は、`packages/ubuntu.sh` に関数と呼び出しも追加します。
+- `-` はそのパッケージ管理ツールで導入しないことを意味します。
 
 ---
 
